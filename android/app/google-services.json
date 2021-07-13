@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "195024030135",
+    "project_id": "smart-irrigation-5badb",
+    "storage_bucket": "smart-irrigation-5badb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:195024030135:android:857d32ae535e124a5e4032",
+        "android_client_info": {
+          "package_name": "com.karif.smart_irrigation"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "195024030135-qioh4bib1qkqqeicqap2dj3bcqq73bjc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDPSjSH8se8lBq0ccUyazBZToHy3DPL8U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "195024030135-qioh4bib1qkqqeicqap2dj3bcqq73bjc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
