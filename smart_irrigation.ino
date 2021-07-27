@@ -28,6 +28,7 @@ int soilmoisturepercent = 0;
 bool isRaining = false;
 float f;
 int waterGuage = 5;
+int pump = 25;
 
 #define FIREBASE_HOST ""              // the project name address from firebase id
 #define FIREBASE_AUTH ""       // the secret key generated from firebase
@@ -38,9 +39,12 @@ int waterGuage = 5;
 
 
 void setup() {
-  dht.begin();
+  Serial.begin(9600);
   connectWifi();
-  pinMode(waterGuage,INPUT_PULLUP);
+  dht.begin();
+  pinMode(waterGuage, INPUT_PULLUP);
+  pinMode(pump, OUTPUT);
+  digitalWrite(pump, LOW);
 }
 
 void loop() {
@@ -76,32 +80,49 @@ void loop() {
 
   Firebase.setFloat(fbdo , "temperature", f);
   //we delay a little bit for next read
-  delay(2000);
+  delay(3000);
 }
 
 
 void readUpdateMoistureData() {
-  soilMoistureValue = analogRead(36);  //put Sensor insert into soil
+  soilMoistureValue = analogRead(36);
+  int waterSensorValue = analogRead(32); //put Sensor insert into soil
+
+  Firebase.getBool(fbdo, "auto_control");
+  String autoControl = String(fbdo.boolData()).c_str();
+  Serial.println("fdfdn");
+  Serial.println("\n");
+  Serial.println(autoControl);
 
   soilmoisturepercent = map(soilMoistureValue, AirValue, WaterValue, 0, 100);
-  Serial.println(soilmoisturepercent);
-  Firebase.setInt(fbdo, "moisture_sensor/value", soilmoisturepercent);
-  if (soilmoisturepercent >= 100)
-  {
-    Serial.println("100 %");
-  }
-  else if (soilmoisturepercent <= 0)
-  {
-    Serial.println("0 %");
-  }
-  else if (soilmoisturepercent > 0 && soilmoisturepercent < 100)
-  {
-    Serial.print(soilmoisturepercent);
-    Serial.println("%");
 
+  if (autoControl == "1") {
+    if (soilmoisturepercent <= 30 && digitalRead(waterGuage) == HIGH && waterSensorValue >= 2500) {
+      digitalWrite(pump, HIGH);
+      Serial.println(soilmoisturepercent);
+    } else {
+      digitalWrite(pump, LOW);
+      Serial.println(soilmoisturepercent);
+    }
+  } else {
+    Firebase.getBool(fbdo, "pumpStatus");
+    String pumpStatus = String(fbdo.boolData()).c_str();
+     Serial.println("fdfdn");
+  Serial.println("\n");
+  Serial.println(pumpStatus);
+    if (pumpStatus == "1") {
+      digitalWrite(pump, HIGH);
+    } else {
+      digitalWrite(pump, LOW);
+    }
   }
-  delay(1000);
+
+Serial.println(soilmoisturepercent);
+Firebase.setInt(fbdo, "moisture_sensor/value", soilmoisturepercent);
+delay(1000);
 }
+
+
 
 void readUpdateRainData() {
   int waterSensorValue = analogRead(32);  //put Sensor insert into soil
@@ -118,24 +139,21 @@ void readUpdateRainData() {
     Firebase.setBool(fbdo, "rain", false);
     isRaining = false;
   }
-  delay(1000);
 }
 
-void getReservoirLevel(){
-  if(digitalRead(waterGuage) ==HIGH ){
-     Serial.println("Water yes");
-       Firebase.setBool(fbdo, "water_level", true);
-  }else{
-    Serial.println("Water no"); 
-     Firebase.setBool(fbdo, "water_level", false);
+void getReservoirLevel() {
+  if (digitalRead(waterGuage) == HIGH ) {
+    Serial.println("Water yes");
+    Firebase.setBool(fbdo, "water_level", true);
+  } else {
+    Serial.println("Water no");
+    Firebase.setBool(fbdo, "water_level", false);
   }
 
-  delay(2000);
 }
 
 
 void connectWifi() {
-  Serial.begin(9600);
   delay(1000);
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   Serial.print("Connecting to ");

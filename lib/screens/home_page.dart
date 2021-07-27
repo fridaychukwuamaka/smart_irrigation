@@ -132,25 +132,33 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         floatingActionButton: ScaleTransition(
           scale: animation,
           child: StreamBuilder<Event?>(
-              stream: dbRef.child('pumpStatus').onValue,
+              stream: dbRef.onValue,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  bool pumpVal = snapshot.data?.snapshot.value;
+                  final value = snapshot.data!.snapshot.value;
+
+                  print(value['auto_control']);
+                  bool pumpVal = value['pumpStatus'];
+                  bool autoControl = value['auto_control'];
                   return FloatingActionButton(
                     elevation: 8,
-                    
                     backgroundColor:
+                    
                         pumpVal == true ? Color(0xFF55DEBF) : Colors.black,
+                        
                     child: Icon(
                       FeatherIcons.power,
                       color: Colors.white,
                     ),
-                    onPressed: () {
-                      _animationController.reset();
-                      _animationController.forward();
+                    
+                    onPressed: !autoControl
+                        ? () {
+                            _animationController.reset();
+                            _animationController.forward();
 
-                      dbRef.child('pumpStatus').set(!pumpVal);
-                    },
+                            dbRef.child('pumpStatus').set(!pumpVal);
+                          }
+                        : null,
                   );
                 } else {
                   return FloatingActionButton(
