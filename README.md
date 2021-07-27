@@ -1,7 +1,5 @@
 # smart_irrigation
-
-A new Flutter project.
-
+It is a mobile app connected to an embedded system, it allows the user to get information about the farm and can also send commands to the embedded system.
 ## Getting Started
 
 This project is a starting point for a Flutter application.
