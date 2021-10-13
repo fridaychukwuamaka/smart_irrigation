@@ -30,8 +30,8 @@ float f;
 int waterGuage = 5;
 int pump = 25;
 
-#define FIREBASE_HOST ""              // the project name address from firebase id
-#define FIREBASE_AUTH ""       // the secret key generated from firebase
+#define FIREBASE_HOST "https://smart-irrigation-5badb-default-rtdb.firebaseio.com"              // the project name address from firebase id
+#define FIREBASE_AUTH "TK2DCo3Qb9ivFPaqJo8kKexWBdfg9YqLBIXeQtCN"       // the secret key generated from firebase
 #define WIFI_SSID "Moto G Play"
 #define WIFI_PASSWORD "wewhere1"
 
@@ -76,9 +76,9 @@ void loop() {
   //converting degree to farenheit
   f = t * (9 / 5) + 32;
 
-  Firebase.setFloat(fbdo , "humidity", h);
-
-  Firebase.setFloat(fbdo , "temperature", f);
+//  Firebase.setFloat(fbdo , "humidity", h);
+//
+//  Firebase.setFloat(fbdo , "temperature", f);
   //we delay a little bit for next read
   delay(3000);
 }
